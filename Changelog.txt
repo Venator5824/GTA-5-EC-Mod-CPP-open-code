@@ -15,5 +15,5 @@ v 0.5.1 / 16-11-2025
 - Whisper included, built with Vulkan, no AVX512
 
 v 0.5.0
- - initial beta release
+ - initial alpha release
 
