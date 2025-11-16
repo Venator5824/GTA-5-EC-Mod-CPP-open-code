@@ -1,4 +1,4 @@
-// ModMain.cpp – v1.0.21 (Central Header Fix + Modular NPC Task Fix)
+// ModMain.cpp – v1.0.21
 // ------------------------------------------------------------
 // 1. PREPROCESSOR & LIBRARIES
 // ------------------------------------------------------------
