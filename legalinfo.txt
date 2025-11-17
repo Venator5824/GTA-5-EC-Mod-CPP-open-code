@@ -1,0 +1,57 @@
+ENHANCED CONVERSATION MOD - LEGAL INFORMATION
+Version: 0.5.0.25.11.11.3586
+For Grand Theft Auto V Single Player Only
+
+COPYRIGHT AND INTELLECTUAL PROPERTY NOTICES
+
+THIRD-PARTY INTELLECTUAL PROPERTY:
+- Grand Theft Auto V © 2013-2025 Rockstar Games, Take-Two Interactive Software Inc.
+- ScriptHookV © Alexander Blade (www.dev-c.com)
+- llama.cpp library © Georgi Gerganov and contributors
+- Phi-3 model © Microsoft Corporation
+- Vulkan ® © The Khronos Group Inc.
+
+MOD AUTHORSHIP:
+- Original mod code and implementation © [Your Name/Pseudonym]
+- All rights reserved
+
+LICENSE AND USAGE TERMS:
+
+1. GRANT OF LICENSE
+   This mod is provided for personal, non-commercial use only.
+
+2. DISTRIBUTION RESTRICTIONS
+   - Redistribution of this mod package is prohibited
+   - Modification of configuration files (.ini) is permitted
+   - Republication of modified versions requires attribution
+
+3. USER RESPONSIBILITIES
+   Users agree to:
+   - Use this mod only with legally acquired copies of GTA V
+   - Use exclusively in single-player mode
+   - Not create or distribute harmful, malicious, or illegal content
+   - Accept all responsibility for installation and usage
+
+4. DISCLAIMER OF WARRANTY
+   This mod is provided "AS IS" without warranties of any kind. The author:
+   - Guarantees the files are free from malware
+   - Provides no guarantees of compatibility or performance
+   - Assumes no liability for damages arising from use
+   - Offers no guarantee of ongoing support or updates
+
+5. ONLINE USAGE WARNING
+   Use of this mod in GTA Online may violate Terms of Service and result in account banning. Use at your own risk.
+
+6. INTELLECTUAL PROPERTY COMPLIANCE
+   This mod constitutes fair use for educational and entertainment purposes. All third-party content remains property of their respective owners.
+
+6. OPEN SOURCE
+   This mod is not open source in itself. Jet feel free to share the .ini files or work on the .ini files, or assist or request fixes, support, suggestions, offering of help or similar.
+
+
+CONTACT:
+
+VenatorModsGTA5@outlook.de
+https://discord.gg/rHJwyRmPeV
+
+Last Updated: [11. of November 2025 (2025-11-17)]
