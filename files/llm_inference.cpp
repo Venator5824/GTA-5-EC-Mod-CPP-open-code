@@ -1,4 +1,3 @@
-//v 1.0.21
 #define _CRT_SECURE_NO_WARNINGS
 #define NOMINMAX
 
@@ -326,6 +325,15 @@ std::string CleanupResponse(std::string text) {
     // Logge den rohen Text (gekürzt, um den Log nicht zu sprengen)
     LogLLM("CleanupResponse: Original text (first 400): " + text.substr(0, (std::min)((size_t)400, text.length())));
 
+    size_t second_assistant = text.find("\n<|assistant|>");
+    if (second_assistant == std::string::npos) {
+        second_assistant = text.find("<|assistant|>", 1); // Suche ab Position 1 (nicht 0)
+    }
+    if (second_assistant != std::string::npos) {
+        text = text.substr(0, second_assistant);
+        LogLLM("CleanupResponse: Cut off at second <|assistant|> tag");
+    }
+
     // --- 1. NAMENS-PRÄFIX ENTFERNEN (Gegen "Stapeln") ---
     size_t firstColonPos = text.find(": ");
     if (firstColonPos != std::string::npos && !g_current_npc_name.empty()) {
@@ -341,7 +349,20 @@ std::string CleanupResponse(std::string text) {
     // --- 2. RUNAWAY-TEXT (STOP WÖRTER) ENTFERNEN ---
     // Erweitere diese Liste mit den vollen Namen deiner Hauptcharaktere
     const std::vector<std::string> stop_tokens = {
-        "<|user|>", "<|assistant|>", "<|end|>",
+        "<|user|>",
+        "<|assistant|>",
+        "<|end|>",
+        "<|endofchat|>", // <-- NEU (aus deinem Log)
+        "[END_CONVERSATION]"
+        "Generate a response"
+        "<"
+        ">"
+        "|"
+        "_"
+        "hash"
+        "ID"
+        "NULL"
+        "null"
         "User:", "Model:",
         "Franklin:", "Michael:", "Trevor:",
         "Franklin Clinton:", "Michael De Santa:", "Trevor Phillips:",
@@ -445,19 +466,26 @@ std::string GenerateLLMResponse(const std::string& fullPrompt) {
             break;
         }
 
-        // --- HIER DEN BLOCK PRÜFEN/EINFÜGEN ---
-        // 32000 = <|endoftext|> (Allgemeines Ende)
-        // 32007 = <|end|> (Spezifisches Ende)
-        // 32010 = <|user|> (WICHTIG: Stoppt, bevor es als "Franklin:" antwortet)
-        if (new_token_id == 32000 || new_token_id == 32007 || new_token_id == 32010) {
+
+        if (new_token_id == 32000 || new_token_id == 32007 || new_token_id == 32010 || new_token_id == 32000)
+            {
             LogLLM("GenerateLLMResponse: Explicit ChatML STOP token detected (ID " + std::to_string(new_token_id) + ")");
             break;
         }
         // --- ENDE DES BLOCKS ---
 
-        char buf[256];
+        char buf[512];  /* increased from 256 */
         int32_t n = llama_token_to_piece(vocab, new_token_id, buf, sizeof(buf), 0, true);
         if (n > 0) {
+            std::string current_piece(buf, static_cast<size_t>(n));
+            if (current_piece.find("<|assistant|>") != std::string::npos ||
+                current_piece.find("<|user|>") != std::string::npos ||
+                current_piece.find("<|end|>") != std::string::npos ||
+                current_piece.find("\n<|") != std::string::npos)  // Fängt "\n<|assistant|>" etc.
+            {
+                LogLLM("GenerateLLMResponse: Stop string detected in token piece");
+                break;
+            }
             if (response_text.length() + n > MAX_OUTPUT) {
                 LogLLM("GenerateLLMResponse: Max character limit reached (" + std::to_string(MAX_OUTPUT) + "), forcing stop.");
                 break;
@@ -609,6 +637,5 @@ void ShutdownAudioDevice() {
     ma_device_uninit(&g_capture_device);
     LogA("ShutdownAudioDevice: Audio device uninitialized.");
 }
-
 
 //EOF
