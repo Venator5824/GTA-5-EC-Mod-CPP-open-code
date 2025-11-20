@@ -81,3 +81,4 @@ private:
     static int KeyNameToVK(const std::string& keyName);
     static std::vector<std::string> SplitString(const std::string& str, char delimiter);
 };
+//EOF
