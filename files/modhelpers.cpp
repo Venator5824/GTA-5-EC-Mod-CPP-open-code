@@ -73,5 +73,4 @@ void UpdateNpcConversationTasks(Ped npc, Ped player) {
     // z.B. if (g_is_npc_speaking) { AI::PLAY_FACIAL_ANIM(...) }
 }
 
-
 // EOF
