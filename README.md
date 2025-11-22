@@ -1,5 +1,5 @@
 
-Mod Version 0.5.1 open alpha
+Mod Version 0.6.0 oben beta
 
 @Credit: No permissions granted
 
