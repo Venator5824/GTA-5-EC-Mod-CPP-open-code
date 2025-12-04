@@ -1,12 +1,12 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
-#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+
+
 #include <algorithm>
 #include <string>
 
 #include "ConfigReader.h"
-
+#include "main.h"
 
 #define NOMINMAX
 #include <windows.h>
@@ -68,12 +68,12 @@ public:
                 // Old memory exists, try to open it again
                 CloseHandle(hMapFile);
                 hMapFile =
-                    OpenFileMappingA(FILE_MAP_ALL_ACCESS, false, SHARED_MEM_NAME);
+                    OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM_NAME);
             }
         }
         else {
             // CLIENT: Open existing memory
-            hMapFile = OpenFileMappingA(FILE_MAP_ALL_ACCESS, false, SHARED_MEM_NAME);
+            hMapFile = OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM_NAME);
         }
 
         if (hMapFile) {
@@ -83,7 +83,7 @@ public:
             // Only Host initializes at startup
             if (isHost && pData) {
                 pData->jobState = AudioJobState::IDLE;
-                pData->lastUpdateTime = GetTimeMs();
+                pData->lastUpdateTime = GetTickCount64();
                 pData->text[0] = '\0';
                 pData->voiceId[0] = '\0';
                 pData->speed = 1.0f;
@@ -116,7 +116,7 @@ public:
         if (currentState != AudioJobState::IDLE &&
             currentState != AudioJobState::COMPLETED) {
             // Timeout check: Has the Audio DLL crashed?
-            ULONGLONG now = GetTimeMs();
+            ULONGLONG now = GetTickCount64();
             ULONGLONG elapsed = now - pData->lastUpdateTime;
 
             if (elapsed > TIMEOUT_MS) {
@@ -131,7 +131,7 @@ public:
         }
 
 
-
+        
         size_t lenText = std::min<size_t>(text.length(), BUFFER_SIZE - 1);
         memcpy(pData->text, text.c_str(), lenText);
         pData->text[lenText] = '\0';
@@ -144,7 +144,7 @@ public:
         pData->errorMsg[0] = '\0';
 
         // Atomic status change
-        pData->lastUpdateTime = GetTimeMs();
+        pData->lastUpdateTime = GetTickCount64();
         pData->jobState = AudioJobState::PENDING;
 
         return true;
@@ -182,8 +182,8 @@ public:
             return "PLAYING";
         case AudioJobState::COMPLETED:
             return "COMPLETED";
-        case AudioJobState::FAILED:
-            return "FAILED: " + std::string(pData->errorMsg);
+       case AudioJobState::FAILED:
+             return "FAILED: " + std::string(pData->errorMsg);
         default:
             return "UNKNOWN";
         }
@@ -210,7 +210,7 @@ public:
         outSpeed = pData->speed;
 
         // Mark as "in progress"
-        pData->lastUpdateTime = GetTimeMs();
+        pData->lastUpdateTime = GetTickCount64();
         pData->jobState = AudioJobState::PROCESSING;
 
         return true;
@@ -220,7 +220,7 @@ public:
     void SetState(AudioJobState newState) {
         if (!pData) return;
 
-        pData->lastUpdateTime = GetTimeMs();
+        pData->lastUpdateTime = GetTickCount64();
         pData->jobState = newState;
     }
 
@@ -232,9 +232,9 @@ public:
         memcpy(pData->errorMsg, errorMsg.c_str(), len);
         pData->errorMsg[len] = '\0';
 
-        pData->lastUpdateTime = GetTimeMs();
+        pData->lastUpdateTime = GetTickCount64();
         pData->jobState = AudioJobState::FAILED;
-    }
+    } 
 
 
 
@@ -242,9 +242,7 @@ public:
     void CompleteJob() {
         if (!pData) return;
 
-        pData->lastUpdateTime = GetTimeMs();
+        pData->lastUpdateTime = GetTickCount64();
         pData->jobState = AudioJobState::COMPLETED;
     }
 };
-
-
